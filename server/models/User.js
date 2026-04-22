@@ -6,6 +6,6 @@ import mongoose from "mongoose";
   image: {type: String, required:true}
  })
 
-const User = mongoose.mode('User', userSchema)
+const User = mongoose.model('User', userSchema)
 
 export default User;
