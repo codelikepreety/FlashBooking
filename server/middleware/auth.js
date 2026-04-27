@@ -10,6 +10,7 @@ export const protectAdmin = async (req,res,next)=>{
     next()
     
   }catch (error){
+    console.error("Auth Middleware Error:", error.message);
     return res.json({success:false , message:"not authorised"})
   }
 
