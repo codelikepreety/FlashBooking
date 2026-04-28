@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
-import { MenuIcon, SearchIcon, XIcon } from 'lucide-react'
+import { MenuIcon, SearchIcon, XIcon, TicketPlus } from 'lucide-react'
 import { useClerk, UserButton, useUser } from '@clerk/react'
 
 const Navbar = () => {
@@ -35,7 +35,7 @@ const Navbar = () => {
               :(
                 <UserButton>
                   <UserButton.MenuItems>
-                    <UserButton.Action label="My Bookings" labelIcon={<TicketPlus width={15} onClick={()=> navigate('/my-bookings')} />} />
+                    <UserButton.Action label="My Bookings" labelIcon={<TicketPlus width={15} />} onClick={()=> navigate('/my-bookings')} />
                   </UserButton.MenuItems>
                 </UserButton>
               )

@@ -13,6 +13,8 @@ export const AppProvider=({ children }) =>{
   const [isAdmin,setIsAdmin]=useState(false)
   const [shows,setShows] = useState([])
   const [favoriteMovies,setFavoriteMovies] = useState([])
+
+  const image_base_url = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
   
   const {user} = useUser()
   const {getToken} = useAuth()
@@ -21,7 +23,7 @@ export const AppProvider=({ children }) =>{
 
   const fetchIsAdmin = async ()=>{
     try{
-      const {data} = await axios.get('/api/adin/is-admin',{headers: {Authorization:`Bearer ${await getToken()}`}})
+      const {data} = await axios.get('/api/admin/is-admin',{headers: {Authorization:`Bearer ${await getToken()}`}})
       setIsAdmin(data.isAdmin)
 
     }catch (error){
@@ -31,7 +33,7 @@ export const AppProvider=({ children }) =>{
 
   const fetchShows = async ()=>{
     try {
-      const {data}= await axios.get('/api/ahow/all')
+      const {data}= await axios.get('/api/show/all')
       if(data.success){
         setShows(data.shows)
       }else{
@@ -72,7 +74,7 @@ export const AppProvider=({ children }) =>{
     axios,
   fetchIsAdmin,
   user,getToken,navigate,isAdmin,shows,
-  favoriteMovies,fetchFavoriteMovies
+  favoriteMovies,fetchFavoriteMovies,image_base_url
   }
   return (
     <AppContext.Provider value={value}>

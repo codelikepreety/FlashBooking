@@ -1,4 +1,5 @@
 import React from 'react'
+import { SignIn } from '@clerk/react'
 import Navbar from './components/Navbar'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
@@ -7,7 +8,7 @@ import MovieDetails from './pages/MovieDetails'
 import SeatLayout from './pages/SeatLayout'
 import MyBookings from './pages/MyBookings'
 import Favorite from './pages/Favorite'
-import {Toaster} from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import Footer from './components/Footer'
 import { useLocation } from 'react-router-dom'
 //import { Layout } from 'lucide-react'
@@ -19,37 +20,37 @@ import ListBookings from './pages/admin/ListBookings'
 import { useAppContext } from './context/AppContext'
 
 const App = () => {
-  const isAdminRoute= useLocation().pathname.startsWith('/admin');
+  const isAdminRoute = useLocation().pathname.startsWith('/admin');
 
-  const {user}= useAppContext
+  const { user } = useAppContext()
 
 
   return (
     <>
-    <Toaster />
-      {!isAdminRoute && <Navbar/>}
+      <Toaster />
+      {!isAdminRoute && <Navbar />}
       <Routes>
-        <Route path='/' element= {<Home/>}/>
-        <Route path='/movies' element= {<Movies/>}/>
-        <Route path='/movies/:id' element= {<MovieDetails/>}/>
-        <Route path='/movies/:id/:date' element= {<SeatLayout/>}/>
-        <Route path='/my-bookings' element= {<MyBookings/>}/>
-        <Route path='/favorites' element= {<Favorite/>}/>
-        <Route path='/admin/*' element={user ? <Layout/>: (
+        <Route path='/' element={<Home />} />
+        <Route path='/movies' element={<Movies />} />
+        <Route path='/movies/:id' element={<MovieDetails />} />
+        <Route path='/movies/:id/:date' element={<SeatLayout />} />
+        <Route path='/my-bookings' element={<MyBookings />} />
+        <Route path='/favorites' element={<Favorite />} />
+        <Route path='/admin/*' element={user ? <Layout /> : (
           <div className='min-h-screen flex justify-center items-center'>
-            <SignIn fallbackRedirectUrl={'/admin'}/>
+            <SignIn fallbackRedirectUrl={'/admin'} />
           </div>
         )}>
-          <Route index element={<Dashboard/>}/>
-          <Route path="add-shows" element={<AddShows/>}/>
-          <Route path="list-shows" element={<ListShows/>}/>
-          <Route path="list-bookings" element={<ListBookings/>}/>
-        
-        
+          <Route index element={<Dashboard />} />
+          <Route path="add-shows" element={<AddShows />} />
+          <Route path="list-shows" element={<ListShows />} />
+          <Route path="list-bookings" element={<ListBookings />} />
+
+
         </Route>
 
       </Routes>
-       {!isAdminRoute && <Footer/>}
+      {!isAdminRoute && <Footer />}
     </>
   )
 }
