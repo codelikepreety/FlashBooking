@@ -8,7 +8,7 @@ const checkSeatsAvailability = async (showId, selectedSeats)=>{
     if(!showData) return false;
 
     const occupiedSeats = showData.occupiedSeats;
-    const isAnySeatTaken = selectedSeats.some(seat => occupiedSeats[seats])
+    const isAnySeatTaken = selectedSeats.some(seat => occupiedSeats[seat])
     return !isAnySeatTaken
   } catch (error){
     console.log(error.message)
@@ -19,7 +19,7 @@ const checkSeatsAvailability = async (showId, selectedSeats)=>{
 
 export const createBooking = async(req,res)=>{
   try{
-    const {userId}= req.auth()
+    const {userId}= req.auth
     const {showId,selectedSeats}=req.body
     const {origin} = req.headers
 
@@ -42,7 +42,7 @@ export const createBooking = async(req,res)=>{
 
     })
     selectedSeats.map((seats)=>{
-      showData.occupiedSeats[seat]=userId
+      showData.occupiedSeats[seats]=userId
 
     })
     showData.markModified('occupiedSeats')

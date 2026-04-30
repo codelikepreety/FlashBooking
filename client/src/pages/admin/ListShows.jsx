@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Loading from '../../components/Loading'
 import Title from '../../components/admin/Title'
-import { dummyShowsData } from '../../assets/assets'
 import { dateFormat } from '../../lib/dateFormat'
 import { useAppContext } from '../../context/AppContext'
 
@@ -21,6 +20,7 @@ const ListShows = () => {
       setLoading(false)
     } catch(error){
       console.error(error)
+      setLoading(false)
     }
     }
   useEffect(()=>{
@@ -32,7 +32,7 @@ const ListShows = () => {
   return ! loading ? (
     <>
     <Title text1="List" text2="Shows"/>
-    <div className="w-full border-collapse rounded-md overflow-hidden text-nowrap">
+    <table className="w-full border-collapse rounded-md overflow-hidden text-nowrap">
       <thead>
         <tr className="bg-primary/20 text-left text-white">
            <th className="p-2 font-medium pl-5">Movie Name</th>
@@ -51,7 +51,7 @@ const ListShows = () => {
           </tr>
         ))}
       </tbody>
-    </div>
+    </table>
     </>
   ) : <Loading />
 }

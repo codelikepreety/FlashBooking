@@ -7,6 +7,7 @@ import Show from "../models/Show.js"
 import User from "../models/User.js"
 
 export const isAdmin = async (req,res)=>{
+    console.log(">>>>>>>>>>>>>>>>>>>>>>.")
   res.json({success: true, isAdmin:true})
 }
 
@@ -25,7 +26,7 @@ export const getDashboardData= async (req,res)=>{
     res.json({success:true,dashboardData})
   }catch(error){
     console.error(error)
-    res.json({success:false,messgae:error.message})
+    res.json({success:false,message:error.message})
 
   }
 }
@@ -33,8 +34,8 @@ export const getDashboardData= async (req,res)=>{
 // api to get all shows
 export const getAllShows= async (req,res)=>{
   try{
-    const shows= (await Show.find({showDateTime:{$gte:new Date()}}).populate('movie')).toSorted({showDateTime:1})
-    res.json({sucess:true,shows})
+    const shows= await Show.find({showDateTime:{$gte:new Date()}}).populate('movie').sort({showDateTime:1})
+    res.json({success:true,shows})
   } catch (error){
     console.error(error)
     res.json({success:false,message:error.message})

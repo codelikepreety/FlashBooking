@@ -11,8 +11,10 @@ export const AppContext = createContext()
 export const AppProvider=({ children }) =>{
 
   const [isAdmin,setIsAdmin]=useState(false)
+  const [isAdminLoading, setIsAdminLoading] = useState(true)
   const [shows,setShows] = useState([])
   const [favoriteMovies,setFavoriteMovies] = useState([])
+  console.log(favoriteMovies)
 
   const image_base_url = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
   
@@ -22,34 +24,45 @@ export const AppProvider=({ children }) =>{
   const navigate = useNavigate()
 
   const fetchIsAdmin = async ()=>{
+    setIsAdminLoading(true)
+    const token = await getToken()
+    console.log(token)
     try{
-      const {data} = await axios.get('/api/admin/is-admin',{headers: {Authorization:`Bearer ${await getToken()}`}})
-      setIsAdmin(data.isAdmin)
-
+      const {data} = await axios.get('/api/admin/is-admin',{headers: {Authorization:`Bearer ${token}`}})
+      if (data.success && data.isAdmin) {
+        setIsAdmin(true)
+      } else {
+        setIsAdmin(false)
+        toast.error(data.message || "Not authorized as admin")
+      }
     }catch (error){
       console.error(error)
+      setIsAdmin(false)
+      toast.error(error.message)
+    }finally{
+      setIsAdminLoading(false)
     }
   }
 
-  const fetchShows = async ()=>{
-    try {
-      const {data}= await axios.get('/api/show/all')
-      if(data.success){
-        setShows(data.shows)
-      }else{
-        toast.error(data.message)
-      }
-    }catch(error){
-      console.error(error)
-    }
-  }
+  // const fetchShows = async ()=>{
+  //   try {
+  //     const {data}= await axios.get('/api/show/all')
+  //     if(data.success){
+  //       setShows(data.shows)
+  //     }else{
+  //       toast.error(data.message)
+  //     }
+  //   }catch(error){
+  //     console.error(error)
+  //   }
+  // }
 
-  const fetchFavoriteMovies =async ()=>{
+  const fetchShows =async ()=>{
     try{
-      const {data} = await axios.get('/api/user/favorites',{headers:{Authorization:`Bearer ${await getToken()}`}})
-      
+      const {data} = await axios.get('/api/show/now-playing',{headers:{Authorization:`Bearer ${await getToken()}`}})
+      // console.log(data)
       if(data.success){
-        setFavoriteMovies(data.movies)
+        setShows(data)
       }else{
         toast.error(data.message)
       }
@@ -64,7 +77,7 @@ export const AppProvider=({ children }) =>{
   useEffect(()=>{
     if(user){
       fetchIsAdmin()
-      fetchFavoriteMovies()
+      // fetchFavoriteMovies()
     }
     
   },[user])
@@ -73,8 +86,8 @@ export const AppProvider=({ children }) =>{
   const value ={
     axios,
   fetchIsAdmin,
-  user,getToken,navigate,isAdmin,shows,
-  favoriteMovies,fetchFavoriteMovies,image_base_url
+  user,getToken,navigate,isAdmin,isAdminLoading,shows,
+  favoriteMovies,image_base_url
   }
   return (
     <AppContext.Provider value={value}>
