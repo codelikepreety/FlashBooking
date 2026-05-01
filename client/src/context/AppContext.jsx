@@ -20,7 +20,7 @@ export const AppProvider=({ children }) =>{
   
   const {user} = useUser()
   const {getToken} = useAuth()
-  const loaction = useLocation()
+  const location = useLocation()
   const navigate = useNavigate()
 
   const fetchIsAdmin = async ()=>{
