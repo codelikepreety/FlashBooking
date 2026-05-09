@@ -8,27 +8,26 @@ import BlurCircle from "../components/BlurCircle";
 import toast from "react-hot-toast";
 
 const SeatLayout = () => {
-  const groupRows=[["A","B"],["C","D"],["E","F"],["G","H"],["I","J"]];
+  const groupRows = [["A", "B"], ["C", "D"], ["E", "F"], ["G", "H"], ["I", "J"]];
   const { id, date } = useParams();
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [show, setShow] = useState(null);
 
   const navigate = useNavigate();
 
-  const getShow = async () => {
-    const show = dummyShowsData.find((show) => show._id === id);
-    if (show) {
-      setShow({
-        movie: show,
-        dateTime: dummyDateTimeData,
-      });
-    }
-  };
+  const show = React.useMemo(() => {
+    const matchedShow = dummyShowsData.find((item) => item._id === id);
+    return matchedShow
+      ? {
+          movie: matchedShow,
+          dateTime: dummyDateTimeData,
+        }
+      : null;
+  }, [id]);
 
   const handleSeatClick = (seatId) => {
-    if(!selectedTime) return toast("Please select a time first");
-    if(!selectedSeats.includes(seatId) && selectedSeats.length >= 4 ) return toast("You can select maximum of 4 seats");
+    if (!selectedTime) return toast("Please select a time first");
+    if (!selectedSeats.includes(seatId) && selectedSeats.length >= 4) return toast("You can select maximum of 4 seats");
     setSelectedSeats((prev) =>
       prev.includes(seatId)
         ? prev.filter((seat) => seat !== seatId)
@@ -47,9 +46,8 @@ const SeatLayout = () => {
               <button
                 key={seatId}
                 onClick={() => handleSeatClick(seatId)}
-                className={`h-8 w-8 rounded border border-primary/60 ${
-                  selectedSeats.includes(seatId) && "bg-primary text-white" 
-                }`}
+                className={`h-8 w-8 rounded border border-primary/60 ${selectedSeats.includes(seatId) && "bg-primary text-white"
+                  }`}
               >
                 {seatId}
               </button>
@@ -61,7 +59,7 @@ const SeatLayout = () => {
   };
 
   useEffect(() => {
-    getShow();
+    // getShow(); // Removed as getShow is not defined and show is computed via useMemo
   }, [id]);
 
   return show ? (
@@ -98,16 +96,16 @@ const SeatLayout = () => {
             {groupRows[0].map((row) => renderSeats(row))}
           </div>
           <div className='grid grid-cols-2 gap-11'>
-          {
-            groupRows.slice(1).map((group,idx) => (
-              <div key={idx} className='flex flex-col items-center mt-10 text-xs text-gray-300'>
-                {group.map((row) => renderSeats(row))}
-              </div>
-            ))
-          }
+            {
+              groupRows.slice(1).map((group, idx) => (
+                <div key={idx} className='flex flex-col items-center mt-10 text-xs text-gray-300'>
+                  {group.map((row) => renderSeats(row))}
+                </div>
+              ))
+            }
+          </div>
         </div>
-        </div>
-        <button onClick={()=> navigate('/my-bookings')} className='flex items-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95'>
+        <button onClick={() => navigate('/my-bookings')} className='flex items-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95'>
           Proceed to Checkout
           <ArrowRightIcon strokeWidth={3} className="w-4 h-4" />
         </button>

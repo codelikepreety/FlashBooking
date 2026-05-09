@@ -1,7 +1,7 @@
 import { StarIcon } from 'lucide-react';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import timeFormat from '../lib/timeFormat';
+//import timeFormat from '../lib/timeFormat';
 import { useAppContext } from '../context/AppContext';
 
 const MovieCard = ({movie}) => {
@@ -21,7 +21,7 @@ const MovieCard = ({movie}) => {
         </button>
         <p className='flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1'>
           <StarIcon className="w-4 h-4 text-primary fill-primary" />
-          {movie.vote_average.toFixed(1)}
+          {movie.vote_average?.toFixed(1)}
         </p>
       </div>
     </div>

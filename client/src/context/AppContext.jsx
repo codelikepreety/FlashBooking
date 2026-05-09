@@ -12,7 +12,7 @@ export const AppProvider=({ children }) =>{
 
   const [isAdmin,setIsAdmin]=useState(false)
   const [isAdminLoading, setIsAdminLoading] = useState(true)
-  const [shows,setShows] = useState([])
+  const [shows,setShows] = useState({ movies: [] })
   const [favoriteMovies,setFavoriteMovies] = useState([])
   console.log(favoriteMovies)
 

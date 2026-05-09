@@ -1,7 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import BlurCirlce from './BlurCircle'
+import BlurCircle from './BlurCircle'
 //import { dummyShowsData } from '../assets/assets'
 import MovieCard from './MovieCard'
 import { useAppContext } from '../context/AppContext'
@@ -14,7 +14,7 @@ const FeaturedSection = () => {
   return (
     <div className='px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden'>
       <div className='relative flex items-center justify-between pt-10 pb-10'>
-        <BlurCirlce top='0' right='-80px'/>
+        <BlurCircle top='0' right='-80px'/>
         <p className='text-gray-300 font-medium text-lg'>Now Showing</p>
         <button onClick={() => navigate('/movies')} className='group flex items-center gap-2 text-sm text-gray-300 cursor-pointer'>
           View All 
@@ -23,7 +23,7 @@ const FeaturedSection = () => {
       </div>
 
       <div className='flex flex-wrap max-sm:justify-center gap-8 mt-8'>
-        {shows.movies.map((show)=>(
+        {shows?.movies?.map((show)=>(
           <MovieCard key={show._id} movie={show} />
         ))}
       </div>
