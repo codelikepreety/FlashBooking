@@ -10,7 +10,7 @@ const FeaturedSection = () => {
 
   const navigate=useNavigate()
   const {shows} = useAppContext()
-  console.log(shows)
+  //console.log(shows)
   return (
     <div className='px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden'>
       <div className='relative flex items-center justify-between pt-10 pb-10'>
@@ -23,7 +23,7 @@ const FeaturedSection = () => {
       </div>
 
       <div className='flex flex-wrap max-sm:justify-center gap-8 mt-8'>
-        {shows?.movies?.map((show)=>(
+        {shows?.movies?.slice(0,4).map((show)=>(
           <MovieCard key={show._id} movie={show} />
         ))}
       </div>

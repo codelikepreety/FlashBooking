@@ -10,7 +10,7 @@ export const protectAdmin = async (req, res, next) => {
     }
 
     const user = await clerkClient.users.getUser(userId);
-    console.log("User ID:", userId, "Private Metadata:", user.privateMetadata);
+    //console.log("User ID:", userId, "Private Metadata:", user.privateMetadata);
 
     const role = user.privateMetadata?.role?.toLowerCase();
 

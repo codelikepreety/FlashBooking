@@ -14,7 +14,7 @@ export const AppProvider=({ children }) =>{
   const [isAdminLoading, setIsAdminLoading] = useState(true)
   const [shows,setShows] = useState({ movies: [] })
   const [favoriteMovies,setFavoriteMovies] = useState([])
-  console.log(favoriteMovies)
+  //console.log(favoriteMovies)
 
   const image_base_url = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
   
@@ -26,7 +26,7 @@ export const AppProvider=({ children }) =>{
   const fetchIsAdmin = async ()=>{
     setIsAdminLoading(true)
     const token = await getToken()
-    console.log(token)
+    //console.log(token)
     try{
       const {data} = await axios.get('/api/admin/is-admin',{headers: {Authorization:`Bearer ${token}`}})
       if (data.success && data.isAdmin) {

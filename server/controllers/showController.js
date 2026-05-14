@@ -6,7 +6,7 @@ export const getNowPlayingMovies = async(req,res)=>{
   try{
     const { data } = await axios.get ('https://api.themoviedb.org/3/movie/now_playing?api_key=9030d8e03f7a5d52b6b1487747250746&language=en-US&page=1')
     const movies= data.results
-    console.log(movies)
+    //console.log(movies)
     res.json({success:true,movies:movies})
 
   } catch (error){
@@ -52,18 +52,16 @@ export const addShow = async (req,res) =>{
     }
 
     const showsToCreate =[];
-    showsInput.forEach(show=>{
-      const showDate = show.date;
-      show.time.forEach((time)=>{
-        const dateTimeString = `${showDate}T${time}`;
-        showsToCreate.push({
-          movie: movieId,
-          showDateTime: new Date(dateTimeString),
-          showPrice,
-          occupiedSeats:{}
-        })
-      })
-    })
+    showsInput.forEach((show) => {
+  const dateTimeString = `${show.date}T${show.time}`;
+
+  showsToCreate.push({
+    movie: movieId,
+    showDateTime: new Date(dateTimeString),
+    showPrice,
+    occupiedSeats: {}
+  });
+});
 
     if(showsToCreate.length > 0){
       await Show.insertMany(showsToCreate)
@@ -103,7 +101,32 @@ export const getShow = async (req,res)=>{
     //get all upcoming shows for the movie
     const shows = await Show.find({movie:movieId, showDateTime:{$gte:new Date()}})
     
-    const movie= await Movie.findById(movieId)
+    let movie= await Movie.findById(movieId)
+    
+    if(!movie){
+      //fetch movie details and credits from TMDB API if not in db
+      const [movieDetailsResponse,movieCreditsResponse] = await Promise.all([axios.get(`https://api.themoviedb.org/3/movie/${movieId}`,{ headers: {Authorization: `Bearer ${process.env.TMDB_API_KEY}`}}),
+        axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`,{headers: {Authorization: `Bearer ${process.env.TMDB_API_KEY}`}})
+      ])
+      const movieApiData=movieDetailsResponse.data;
+      const movieCreditsData = movieCreditsResponse.data;
+
+      movie = {
+        _id: movieId,
+        title: movieApiData.title,
+        overview: movieApiData.overview,
+        poster_path:movieApiData.poster_path,
+        backdrop_path:movieApiData.backdrop_path,
+        genres: movieApiData.genres,
+        casts: movieCreditsData.cast,
+        release_date: movieApiData.release_date,
+        original_language:movieApiData.original_language,
+        tagline: movieApiData.tagline ||"",
+        vote_average:movieApiData.vote_average,
+        runtime: movieApiData.runtime,
+      }
+    }
+
     const dateTime={}
 
     shows.forEach((show)=>{

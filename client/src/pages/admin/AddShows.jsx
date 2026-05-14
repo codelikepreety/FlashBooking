@@ -13,7 +13,7 @@ const AddShows = () => {
 
   const currency =import.meta.env.VITE_CURRENCY
   const [nowPlayingMovies, setNowPlayingMovies]=useState([])
-  console.log(nowPlayingMovies)
+  //console.log(nowPlayingMovies)
   const [selectedMovie,setSelectedMovie] =useState(null)
   const [dateTimeSelection,setDateTimeSelection]=useState({})
   const [dateTimeInput,setDateTimeInput]=useState("")
@@ -70,7 +70,7 @@ const AddShows = () => {
       if(!selectedMovie || Object.keys(dateTimeSelection).length ===0 || !showPrice){
         return toast.error('Missing required fields')
       }
-      const showsInput = Object.entries(dateTimeSelection).flatMap(([date, times]) =>
+      const showsInput = Object.entries(dateTimeSelection).map(([date, times]) =>
   times.map(time => ({
     date,
     time
@@ -111,7 +111,7 @@ const AddShows = () => {
     <div className="overflow-x-auto pb-4">
       <div className="group flex flex-wrap gap-4 mt-4 w-max">
         {nowPlayingMovies.map((movie)=>(
-          <div key={movie.id} className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300`} onClick={() => setSelectedMovie(movie.id)}>
+          <div key={movie.id} className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300`} onClick={() => setSelectedMovie(movie._id)}>
             <div className="relative rounded-lg overflow-hidden">
             <img src={image_base_url + movie.poster_path} alt="" className="w-full object-cover brightness-90" />
             <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">

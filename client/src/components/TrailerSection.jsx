@@ -6,7 +6,7 @@ import BlurCircle from './BlurCircle';
 
 const TrailerSection = () =>{
   const [currentTrailer, setCurrentTrailer] = useState(dummyTrailers[0]);
-  console.log('Current trailer URL:', currentTrailer.videoUrl);
+  //console.log('Current trailer URL:', currentTrailer.videoUrl);
   return (
     <div className='px-6 md:px-16 lg:px-24 xl:px-44 py-20 overflow-hidden'>
       <p className='text-gray-300 font-medium text-lg max-w-[960px] mx-auto'>Trailers</p>
