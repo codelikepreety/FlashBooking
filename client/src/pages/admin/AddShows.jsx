@@ -21,32 +21,39 @@ const AddShows = () => {
 
   const [addingShow, setAddingShow] = useState(false)
 
-  const fetchNowPlayingMovies=async()=>{
-    try{
-      const {data}= await axios.get('/api/show/now-playing',{
-        headers: {Authorization :`Bearer ${await getToken()}`}})
-        if(data.success){
-          setNowPlayingMovies(data.movies)
-        }
-
-    }catch (error){
+  const fetchNowPlayingMovies = React.useCallback(async () => {
+    try {
+      const { data } = await axios.get('/api/show/now-playing', {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      })
+      if (data.success) {
+        setNowPlayingMovies(data.movies)
+      }
+    } catch (error) {
       console.error('Error fetching movies:', error)
-
     }
-  }
+  }, [axios, getToken])
 
   const handleDateTimeAdd=()=>{
-    if(!dateTimeInput) return;
-    const [date,time]=dateTimeInput.split("T")
-    if(!date || !time) return
+    if (!dateTimeInput) {
+      toast.error('Please choose a date and time first')
+      return
+    }
+
+    const [date, time] = dateTimeInput.split('T')
+    if (!date || !time) {
+      toast.error('Please choose a valid date and time')
+      return
+    }
 
     setDateTimeSelection((prev)=>{
-      const times=prev[date] ||[]
-      if(!times.includes(time)){
-        return {...prev,[date]:[...times,time]}
-
+      const times = prev[date] || []
+      if (!times.includes(time)) {
+        return { ...prev, [date]: [...times, time] }
       }
-      return prev;
+
+      toast('This time is already added for the selected date')
+      return prev
     })
   }
   const handleRemoveTime=(date,time)=>{
@@ -67,22 +74,31 @@ const AddShows = () => {
     try{
       setAddingShow(true)
 
-      if(!selectedMovie || Object.keys(dateTimeSelection).length ===0 || !showPrice){
-        return toast.error('Missing required fields')
+      if (!selectedMovie) {
+        return toast.error('Please select a movie')
       }
-      const showsInput = Object.entries(dateTimeSelection).map(([date, times]) =>
-  times.map(time => ({
-    date,
-    time
-  }))
-)
 
-      const payload ={
+      if (Object.keys(dateTimeSelection).length === 0) {
+        return toast.error('Please add at least one date and time')
+      }
+
+      if (!showPrice || Number(showPrice) <= 0) {
+        return toast.error('Please enter a valid show price')
+      }
+
+      const showsInput = Object.entries(dateTimeSelection).flatMap(([date, times]) =>
+        times.map((time) => ({
+          date,
+          time,
+        }))
+      )
+
+      const payload = {
         movieId: selectedMovie,
         showsInput,
-        showPrice: Number(showPrice)
+        showPrice: Number(showPrice),
       }
-      const {data} = await axios.post ('/api/show/add', payload, {headers: {Authorization: `Bearer ${await getToken()}`}})
+      const {data} = await axios.post('/api/show/add', payload, {headers: {Authorization: `Bearer ${await getToken()}`}})
 
       if(data.success){
         toast.success(data.message)
@@ -100,10 +116,10 @@ const AddShows = () => {
     }
   }
   useEffect(() => {
-  if (user) {
-    fetchNowPlayingMovies()
-  }
-}, [user])
+    if (user) {
+      fetchNowPlayingMovies()
+    }
+  }, [user, fetchNowPlayingMovies])
   return nowPlayingMovies.length > 0 ? (
     <>
     <Title text1="Add" text2="Shows" />
@@ -111,7 +127,7 @@ const AddShows = () => {
     <div className="overflow-x-auto pb-4">
       <div className="group flex flex-wrap gap-4 mt-4 w-max">
         {nowPlayingMovies.map((movie)=>(
-          <div key={movie.id} className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300`} onClick={() => setSelectedMovie(movie._id)}>
+          <div key={movie.id} className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300`} onClick={() => setSelectedMovie(movie.id)}>
             <div className="relative rounded-lg overflow-hidden">
             <img src={image_base_url + movie.poster_path} alt="" className="w-full object-cover brightness-90" />
             <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">

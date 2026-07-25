@@ -14,25 +14,35 @@ const MyBookings = () => {
   const [bookings , setBookings] = useState([])
   const [isLoading, setIsLoading] = useState(true);
 
-  const getMyBookings = async () => {
-    
-    try {
-      const {data} = await axios.get('/api/user/bookings',{headers: {Authorization: `Bearer ${await getToken()}`}})
-      if (data.success){
-        setBookings(data.bookings)
-      }
-    } catch (error){
-      console.log(error)
-
-    }
-    setIsLoading(false)
-  }
-
   useEffect(() => {
-    if(user){
-      getMyBookings();
-    }
-  },[user])
+    let cancelled = false;
+
+    const fetchBookings = async () => {
+      if (!user) return;
+
+      try {
+        const { data } = await axios.get('/api/user/bookings', {
+          headers: { Authorization: `Bearer ${await getToken()}` },
+        });
+
+        if (!cancelled && data.success) {
+          setBookings(data.bookings);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchBookings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user, axios, getToken]);
 
 
   return !isLoading ? (

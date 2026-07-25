@@ -28,7 +28,7 @@ export const createBooking = async(req,res)=>{
 
     if(!isAvailable){
       return res.json({success:false,message:"selected seats are not available"})
-
+ 
     }
     //get the show deatils
     const showData = await Show.findById(showId).populate('movie')
@@ -43,7 +43,6 @@ export const createBooking = async(req,res)=>{
     })
     selectedSeats.map((seats)=>{
       showData.occupiedSeats[seats]=userId
-
     })
     showData.markModified('occupiedSeats')
 

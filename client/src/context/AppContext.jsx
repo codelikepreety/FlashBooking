@@ -71,6 +71,7 @@ export const AppProvider=({ children }) =>{
       console.error(error)
     }
   }
+
   useEffect(()=>{
     fetchShows()
   },[])
@@ -96,4 +97,5 @@ export const AppProvider=({ children }) =>{
   )
 }
 
-export const useAppContext=()=> useContext(AppContext)
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAppContext = () => useContext(AppContext)

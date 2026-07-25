@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router-dom'
 const DateSelect = ({dateTime, id}) => {
   const navigate= useNavigate();
   const [selected, setSelected] = React.useState(null)
+  const availableDates = Object.keys(dateTime || {})
 
   const onBookHandler =()=>{
     if(!selected) return toast("Please select a date")
     navigate(`/movies/${id}/${selected}`)
     scrollTo(0,0)
-    
-
   }
+
   return (
     <div id='dateSelect' className='pt-30'>
       <div className='flex flex-col md:flex-row items-center justify-between gap-10 relative p-8 bg-primary/10 border border-primary/20 rounded-lg'>
@@ -25,15 +25,15 @@ const DateSelect = ({dateTime, id}) => {
         <div className='flex items-center gap-6 text-sm mt-5'>
           <ChevronLeftIcon width={28} />
           <span className='grid grid-cols-3 md:flex flex-wrap md:max-w-lg gap-4'>
-            {Object.keys(dateTime || {}).length > 0 ? (
-              Object.keys(dateTime).map((date)=>(
+            {availableDates.length > 0 ? (
+              availableDates.map((date)=>(
                 <button onClickCapture={()=>setSelected(date)} key={date} className={`flex flex-col items-center justify-center h-14 w-14 aspect-square rounded cursor-pointer ${selected === date ? 'bg-primary text-white' : 'border border-primary/70'}`} onClick={() => setSelected(date)}>
                   <span>{new Date(date).getDate()}</span>
                   <span>{new Date(date).toLocaleDateString("en-US",{month:"short"})}</span>
                 </button>
               ))
             ) : (
-              <span className='text-gray-400 italic flex items-center h-14'>No shows scheduled for this movie.</span>
+              <span className='text-gray-400 italic flex items-center h-14'>No booking dates are available yet. Add a show from the admin panel to make dates appear here.</span>
             )}
           </span>
           <ChevronLeftIcon width={28} />
